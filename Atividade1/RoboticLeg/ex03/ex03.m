@@ -13,7 +13,7 @@ r_BF_inB = [...
 % determine the foot point Jacobian J_BF_inB=d(r_BF_inB)/dq
 J_BF_inB = ...
 
-% what generalized velocity dq do you have to apply in a configuration q = [0;60°;-120°]
+% what generalized velocity do do you have to apply in a configuration q = [0;60°;-120°]
 % to lift the foot in vertical direction with v = [0;0;-1m/s];
 v = [0; 0; -1]
 qi = [0; 60*(pi/180); -120*(pi/180)];
