@@ -21,9 +21,9 @@ H_12 = [ cos(beta) 0 sin(beta) 0; [0 1 0 0]; -sin(beta) 0 cos(beta) -1; [0 0 0 1
 H_23 = [ cos(gamma) 0 sin(gamma) 0; [0 1 0 0]; -sin(gamma) 0 cos(gamma) -1; [0 0 0 1]];
 
 % create the cumulative transformation matrix
-H_B3 = ...; 
+H_B3 = H_B1*H_12*H_23;
 
 % find the foot point position vector
-r_BF_inB = ...;
+r_BF_inB = (H_B3*[0 0 -1 1]')(1:3,:);
      
 valid
