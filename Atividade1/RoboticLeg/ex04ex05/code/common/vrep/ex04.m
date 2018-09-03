@@ -47,7 +47,18 @@ rGoal = [0.2,0.5,-2]';
 %%% enter here your algorithm
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-qGoal = ...;
+while(1) % Repeat loop while error is not small enough (10-5)
+  error = rGoal - r_BF_inB(q0(1), q0(2), q0(3));
+  % normalize error
+  n = norm(error);
+  if (n < 1e-5) 
+    break;
+  end
+  % Get Moore-Penrose Inverse for the Jacobian J_BF_inB at the current q
+  jInv = pinv(J_BF_inB(q0(1),q0(2),q0(3)));
+  qGoal = q0 + jInv*error;
+  q0 = qGoal;
+end
 
 updatePos(vrep,connection.clientID,qGoal)
 
