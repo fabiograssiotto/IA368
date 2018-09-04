@@ -77,10 +77,16 @@ simulation_setStepped(connection,true);
         % controller:
         % step 1: create a simple p controller to determine the desired foot
         % point velocity
-        v = ...;
+        
+        v = drGoal(t) + 10.0 * (rGoal(t) - rArr(:,i));
+        
+        
         % step 2: perform inverse differential kinematics to calculate the
-        % gneralized velocities
-        dq = ...;
+        % generalized velocities
+        
+        % Get Moore-Penrose Inverse for the Jacobian J_BF_inB at the current q
+        jInv = pinv(J_BF_inB(q(1),q(2),q(3)));
+        dq = jInv * v;
         
         updateVels(vrep,connection.clientID,dq)
 
