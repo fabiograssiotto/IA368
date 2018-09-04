@@ -46,12 +46,13 @@ rGoal = [0.2,0.5,-2]';
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% enter here your algorithm
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-while(1) % Repeat loop while error is not small enough (10-5)
+disp("Inverse Kinematics Algorithm");
+while(1) % Repeat loop while error is not small enough (1e-5)
   error = rGoal - r_BF_inB(q0(1), q0(2), q0(3));
-  % normalize error
+  % Get the vector maginitude of the error (norm)
   n = norm(error);
-  if (n < 1e-5) 
+  disp(['Error norm = ', num2str(n)]);
+  if (n < 1e-5)
     break;
   end
   % Get Moore-Penrose Inverse for the Jacobian J_BF_inB at the current q
@@ -59,6 +60,7 @@ while(1) % Repeat loop while error is not small enough (10-5)
   qGoal = q0 + jInv*error;
   q0 = qGoal;
 end
+disp(['qGoal end = ', num2str(qGoal(1)), ' ', num2str(qGoal(2)), ' ', num2str(qGoal(3))]);
 
 updatePos(vrep,connection.clientID,qGoal)
 
