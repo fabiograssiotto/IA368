@@ -78,7 +78,14 @@ simulation_setStepped(connection,true);
         % step 1: create a simple p controller to determine the desired foot
         % point velocity
         
-        v = drGoal(t) + 10.0 * (rGoal(t) - rArr(:,i));
+        % Error = Goal Position in the circle - Current position of the leg.
+        err = rGoal(t) - rArr(:,i);
+        % Gain for proportional controller, applied to the error.
+        % k value was adjusted with comparison to the path for the foot
+        % circle.
+        k = 16.0; 
+        % Calculate foot point velocity
+        v = drGoal(t) + k*err;
         
         
         % step 2: perform inverse differential kinematics to calculate the
