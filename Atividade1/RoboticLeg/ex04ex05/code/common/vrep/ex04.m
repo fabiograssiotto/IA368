@@ -49,7 +49,7 @@ rGoal = [0.2,0.5,-2]';
 disp("Inverse Kinematics Algorithm");
 while(1) % Repeat loop while error is not small enough (1e-5)
   error = rGoal - r_BF_inB(q0(1), q0(2), q0(3));
-  % Get the vector maginitude of the error (norm)
+  % Get the vector magnitude of the error (norm)
   n = norm(error);
   disp(['Error norm = ', num2str(n)]);
   if (n < 1e-5)
