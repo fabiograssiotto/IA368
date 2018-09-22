@@ -91,7 +91,34 @@ parameters.angle_threshold = deg2rad(10);%0.4; % threshold orientation to goal
 R = parameters.wheelRadius;
 
 %% teleoperation program goes here
-
+loop = 1;
+keybuffer = 0; % to buffer the last key pressed and increase speed if necessary.
+speed = 0.1; % initial speed, increased with repeated keypresses.
+while loop 
+    ch = getkeywaitchar(1); % gets keys every 1 second
+    
+    % Sets speed
+    if (ch == keybuffer)
+        speed = speed + 0.1;
+    else 
+        speed = 0.1; % resets speed
+    end
+    keybuffer = ch;
+        
+    if (ch == 44 || ch == 100) % D/d key prints a linear fwd speed
+        Pioneer_p3dx_setWheelSpeeds(connection, speed, speed);
+    elseif (ch == 65 || ch == 97) % A/a key prints a backwards fwd speed
+        Pioneer_p3dx_setWheelSpeeds(connection, -speed, -speed);
+    elseif (ch == 87 || ch == 119) % W/w key rotates counterclockwise
+        Pioneer_p3dx_setWheelSpeeds(connection, 0.0, speed);
+    elseif (ch == 83 || ch == 115) % S/s key rotates clockwise
+        Pioneer_p3dx_setWheelSpeeds(connection, speed, 0.0); 
+    elseif (ch == 32) % stops robot
+        Pioneer_p3dx_setWheelSpeeds(connection, 0.0, 0.0);
+    elseif (ch == 88 || ch == 120) % X/x quits teleoperation
+        loop = 0;
+    end
+end
 
 %% Bring Pioneer_p3dx to standstill
 Pioneer_p3dx_setWheelSpeeds(connection, 0.0, 0.0);
