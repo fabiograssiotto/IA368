@@ -17,6 +17,9 @@ lambda = atan2(yg-y, xg-x);     % angle of the vector pointing from the robot to
 alpha = lambda - theta;         % angle of the vector pointing from the robot to the goal in the robot frame
 alpha = normalizeAngle(alpha);
 
+% calculate beta
+beta = - theta - alpha;
+
 % the following paramerters should be used:
 % Task 3:
 % parameters.Kalpha, parameters.Kbeta, parameters.Krho: controller tuning parameters
@@ -25,7 +28,32 @@ alpha = normalizeAngle(alpha);
 % parameters.useConstantSpeed: Turn on constant speed option
 % parameters.constantSpeed: The speed used when constant speed option is on
 
-vu =###; % [m/s]
-omega = ### % [rad/s]
+% backwards velocities allowed:
+if (parameters.backwardAllowed == true)
+    if ( alpha <= pi/2 && alpha >= -pi/2) 
+        % Alpha is normalized between [-pi,pi].
+        % If the angle of the vector pointing from the robot to the goal in
+        % the robot frame is between -90 and 90 degrees, a positive velocity is a faster
+        % alternative for the controller. Otherwise, use a negative one.
+        vel_factor = 1.0;
+    else
+        vel_factor = -1.0;
+    end
+end
+
+% Only forward velocities
+if (parameters.useConstantSpeed == false)
+    % Constant speed setting is off.
+    vu = vel_factor*parameters.Krho*rho;
+    omega = parameters.Kalpha*alpha + parameters.Kbeta*beta;
+else
+    % Constant speed setting is on.
+    vu_pre = parameters.Krho*rho;
+    omega_pre = parameters.Kalpha*alpha + parameters.Kbeta*beta;
+    
+    % Now scale vu and omega to keep vu constant.
+    % Using the fact that the quotient between v/w is kept constant.
+    vu = vel_factor*parameters.constantSpeed;
+    omega = omega_pre * (vu/vu_pre);
 end
 
