@@ -41,7 +41,7 @@ if (parameters.backwardAllowed == true)
     end
 end
 
-% Only forward velocities
+% Now calculate velocity and omega.
 if (parameters.useConstantSpeed == false)
     % Constant speed setting is off.
     vu = vel_factor*parameters.Krho*rho;
