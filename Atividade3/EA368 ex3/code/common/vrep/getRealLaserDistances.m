@@ -46,9 +46,9 @@ if realRobot==1
     http_init('SID_7755');
 
     % Declaration of variables
-    %connection = 'http://10.1.3.130:4950';  %use this address if you are
+    connection = 'http://10.1.3.130:4950';  %use this address if you are
     %connected locally to the robot in the REALabs wifi network
-    connection = 'http://143.106.148.171:9090/resource/RobotFEEC2';
+    %connection = 'http://143.106.148.171:9090/resource/RobotFEEC2';
    
     parameters.wheelDiameter = .195;
     parameters.wheelRadius = parameters.wheelDiameter/2.0;
@@ -77,7 +77,12 @@ pause(1)
 %% reading laser
 %%%PUT YOUR CODE HERE
 
-dist = Pioneer_p3dx_getLaserData(connection,'distances');
+% Collect data n times and store to laser data array
+for a = 1:5000
+    dist = Pioneer_p3dx_getLaserData(connection,'distances');
+    fprintf("Measurement %d \n", a);
+    laser_data(a, :) = dist;
+end
 
 if realRobot~= 1
      simulation_stop(connection);
