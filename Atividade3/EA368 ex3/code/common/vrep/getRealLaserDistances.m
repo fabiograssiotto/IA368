@@ -77,6 +77,7 @@ pause(1)
 %% reading laser
 %%%PUT YOUR CODE HERE
 
+dist = Pioneer_p3dx_getLaserData(connection,'distances');
 
 if realRobot~= 1
      simulation_stop(connection);
