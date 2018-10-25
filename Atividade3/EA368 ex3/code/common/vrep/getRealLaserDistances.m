@@ -76,7 +76,7 @@ pause(1)
 
 %% reading laser
 %%%PUT YOUR CODE HERE
-
+optionStr= '?range=-100:100:20';
 % Collect data n times and store to laser data array
 for a = 1:5000
     dist = Pioneer_p3dx_getLaserData(connection,'distances');
