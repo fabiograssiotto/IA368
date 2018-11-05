@@ -14,7 +14,7 @@ params.MIN_POINTS_PER_SEGMENT = 20;
 for testIndex=1:6,
     fprintf('Testing laser scan %i: ', testIndex);
     
-    load(sprintf('../test/data/testLineExtraction%d', testIndex)); % loads z, R, theta, rho
+    load(sprintf('../test/data/testLineExtraction%d.mat', testIndex)); % loads z, R, theta, rho
     
     C_TR = diag([ones(size(theta)), ones(size(rho))]);
     

@@ -15,16 +15,29 @@ function [alpha, r] = fitLine(XY)
 % XY(2,:) contains y position of the points
 
 
-    xc = ###
-    yc = ###
-
+    X = XY(1,:);
+    Y = XY(2,:);
+    
+    xc = mean(X);
+    yc = mean(Y);
+    
     % compute parameter alpha (see exercise pages)
-    nom   = ###
-    denom = ###
-    alpha = ###
+    s = 0;
+    for i = 1:length(X)
+        s = s + (X(i) - xc)*(Y(i) - yc);
+    end
+    nom   = -2*s;
+    
+    denom = 0;
+    for i = 1:length(X)
+        denom = denom + ((Y(i) - yc)^2 - (X(i) - xc)^2); 
+    end
+    
+    alpha = atan2(nom,denom)/2;
 
     % compute parameter r (see exercise pages)
-    r = ###
+    % (xc,yc) must lie in the line we are fitting.
+    r = xc*cos(alpha) + yc*sin(alpha);
 
 
 % Eliminate negative radii
