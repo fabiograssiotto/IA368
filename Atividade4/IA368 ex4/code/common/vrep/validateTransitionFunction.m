@@ -1,6 +1,6 @@
 function [varargout] = validateTransitionFunction()
 
-tolerance = 1e-5;
+tolerance = 1e-5 1;
 success = 1;
 
 load data/validationData.mat

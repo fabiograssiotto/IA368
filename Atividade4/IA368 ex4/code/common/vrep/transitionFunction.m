@@ -10,19 +10,30 @@ function [f, F_x, F_u] = transitionFunction(x,u, l)
 %STARTRM
 
 syms xX xY xTheta uDeltaSl uDeltaSr;
+xSym = sym('x', [1 3]);
+uSym = sym('u', [1 2]);
+
 
 % f is the estimate for the state x at T t.
-f_Sym = [xX;xY;xTheta] + [ (uDeltaSr + uDeltaSl)/2*cos(xTheta + (uDeltaSr-uDeltaSl)/2*l);
+%f_Sym = [xX;xY;xTheta] + [ (uDeltaSr + uDeltaSl)/2*cos(xTheta + (uDeltaSr-uDeltaSl)/2*l);
+%          (uDeltaSr + uDeltaSl)/2*sin(xTheta + (uDeltaSr-uDeltaSl)/2*l);
+%          (uDeltaSl - uDeltaSr)/l];
+
+uDeltaDl = uSym(1);
+uDeltaSr = uSym(2);
+xTheta = xSym(3);
+
+f_Sym = xSym' + [ (uDeltaSr + uDeltaSl)/2*cos(xTheta + (uDeltaSr-uDeltaSl)/2*l);
           (uDeltaSr + uDeltaSl)/2*sin(xTheta + (uDeltaSr-uDeltaSl)/2*l);
-          (uDeltaSl - uDeltaSr)/l];
+          (uDeltaSl - uDeltaSr)/l]
 
 % Jacobians
-J_x = jacobian(f_Sym, [xX;xY;xTheta]);
-J_u = jacobian(f_Sym, [uDeltaSl;uDeltaSr]);
+%J_x = jacobian(f_Sym, [xX,xY,xTheta]);
+%J_u = jacobian(f_Sym, [uDeltaSl,uDeltaSr]);
 
 % Evaluation 
-f = eval(subs(f_Sym, [xX;xY;xTheta;uDeltaSl;uDeltaSr], [x(1);x(2);x(3);u(1);u(2)]));
-F_x = eval(subs(J_x, [xX;xY;xTheta;uDeltaSl;uDeltaSr], [x(1);x(2);x(3);u(1);u(2)]));
-F_u = eval(subs(J_u, [xX;xY;xTheta;uDeltaSl;uDeltaSr], [x(1);x(2);x(3);u(1);u(2)]));
+f = double(eval(subs(f_Sym, [xX,xY,xTheta,uDeltaSl,uDeltaSr], [x(1),x(2),x(3),u(1),u(2)])));
+%F_x = double(eval(subs(J_x, [xX,xY,xTheta,uDeltaSl,uDeltaSr], [x(1),x(2),x(3),u(1),u(2)])));
+%F_u = double(eval(subs(J_u, [xX,xY,xTheta,uDeltaSl,uDeltaSr], [x(1),x(2),x(3),u(1),u(2)])));
 
 %ENDRM
