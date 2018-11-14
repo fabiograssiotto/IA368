@@ -8,9 +8,21 @@ function [f, F_x, F_u] = transitionFunction(x,u, l)
 % State and input are defined according to "Introduction to Autonomous Mobile Robots", pp. 337
 
 %STARTRM
-f = #;
 
-F_x = #;
+syms xX xY xTheta uDeltaSl uDeltaSr;
 
-F_u = #;
+% f is the estimate for the state x at T t.
+f_Sym = [xX;xY;xTheta] + [ (uDeltaSr + uDeltaSl)/2*cos(xTheta + (uDeltaSr-uDeltaSl)/2*l);
+          (uDeltaSr + uDeltaSl)/2*sin(xTheta + (uDeltaSr-uDeltaSl)/2*l);
+          (uDeltaSl - uDeltaSr)/l];
+
+% Jacobians
+J_x = jacobian(f_Sym, [xX;xY;xTheta]);
+J_u = jacobian(f_Sym, [uDeltaSl;uDeltaSr]);
+
+% Evaluation 
+f = eval(subs(f_Sym, [xX;xY;xTheta;uDeltaSl;uDeltaSr], [x(1);x(2);x(3);u(1);u(2)]));
+F_x = eval(subs(J_x, [xX;xY;xTheta;uDeltaSl;uDeltaSr], [x(1);x(2);x(3);u(1);u(2)]));
+F_u = eval(subs(J_u, [xX;xY;xTheta;uDeltaSl;uDeltaSr], [x(1);x(2);x(3);u(1);u(2)]));
+
 %ENDRM
