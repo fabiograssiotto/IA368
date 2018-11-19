@@ -8,32 +8,38 @@ function [f, F_x, F_u] = transitionFunction(x,u, l)
 % State and input are defined according to "Introduction to Autonomous Mobile Robots", pp. 337
 
 %STARTRM
-
-syms xX xY xTheta uDeltaSl uDeltaSr;
-xSym = sym('x', [1 3]);
-uSym = sym('u', [1 2]);
-
+%syms xX xY xTheta uDeltaSr uDeltaSl;
+% Symbolic solution does not seem to work at all.
+xX = x(1);
+xY = x(2);
+xTheta = x(3);
+uDeltaSl = u(1);
+uDeltaSr = u(2);
 
 % f is the estimate for the state x at T t.
-%f_Sym = [xX;xY;xTheta] + [ (uDeltaSr + uDeltaSl)/2*cos(xTheta + (uDeltaSr-uDeltaSl)/2*l);
-%          (uDeltaSr + uDeltaSl)/2*sin(xTheta + (uDeltaSr-uDeltaSl)/2*l);
-%          (uDeltaSl - uDeltaSr)/l];
+f = [xX;xY;xTheta] + [ ((uDeltaSr + uDeltaSl)/2)*cos(xTheta + ((uDeltaSr-uDeltaSl)/2*l));
+          ((uDeltaSl + uDeltaSr)/2)*sin(xTheta + ((uDeltaSr-uDeltaSl)/2*l));
+          (uDeltaSr - uDeltaSl)/l];
 
-uDeltaDl = uSym(1);
-uDeltaSr = uSym(2);
-xTheta = xSym(3);
+% Jacobians - formulas by hand.
+F_x = [ 1 0 -(((uDeltaSr + uDeltaSl)/2)*sin(xTheta+(((uDeltaSr - uDeltaSl)/l)/2))); 
+        0 1 (((uDeltaSr + uDeltaSl)/2)*cos(xTheta+(((uDeltaSr - uDeltaSl)/l)/2)));
+        0 0 1];
+        
+F_u = [cos(xTheta+(((uDeltaSr - uDeltaSl)/l)/2))/2 + (((uDeltaSr + uDeltaSl)/2)/(2*l))*sin(xTheta+(((uDeltaSr - uDeltaSl)/l)/2))...
+          cos(xTheta+(((uDeltaSr - uDeltaSl)/l)/2))/2 - (((uDeltaSr + uDeltaSl)/2)/(2*l))*sin(xTheta+(((uDeltaSr - uDeltaSl)/l)/2));
+       sin(xTheta+(((uDeltaSr - uDeltaSl)/l)/2))/2 - (((uDeltaSr + uDeltaSl)/2)/(2*l))*cos(xTheta+(((uDeltaSr - uDeltaSl)/l)/2))... 
+          sin(xTheta+(((uDeltaSr - uDeltaSl)/l)/2))/2 + (((uDeltaSr + uDeltaSl)/2)/(2*l))*cos(xTheta+(((uDeltaSr - uDeltaSl)/l)/2));
+       (-1/(l))...
+          (1/(l))] ;
 
-f_Sym = xSym' + [ (uDeltaSr + uDeltaSl)/2*cos(xTheta + (uDeltaSr-uDeltaSl)/2*l);
-          (uDeltaSr + uDeltaSl)/2*sin(xTheta + (uDeltaSr-uDeltaSl)/2*l);
-          (uDeltaSl - uDeltaSr)/l]
-
-% Jacobians
-%J_x = jacobian(f_Sym, [xX,xY,xTheta]);
-%J_u = jacobian(f_Sym, [uDeltaSl,uDeltaSr]);
+% Jacobians - Symbolic.
+%J_x = jacobian(f_Sym, [xX;xY;xTheta]);
+%J_u = jacobian(f_Sym, [uDeltaSl;uDeltaSr]);
 
 % Evaluation 
-f = double(eval(subs(f_Sym, [xX,xY,xTheta,uDeltaSl,uDeltaSr], [x(1),x(2),x(3),u(1),u(2)])));
-%F_x = double(eval(subs(J_x, [xX,xY,xTheta,uDeltaSl,uDeltaSr], [x(1),x(2),x(3),u(1),u(2)])));
-%F_u = double(eval(subs(J_u, [xX,xY,xTheta,uDeltaSl,uDeltaSr], [x(1),x(2),x(3),u(1),u(2)])));
-
+%f =  eval(subs(f_Sym, [xX xY xTheta uDeltaSr uDeltaSl], [x(1) x(2) x(3) u(2) u(1)]));
+%F_x = eval(subs(J_x, [xX xY xTheta uDeltaSr uDeltaSl], [x(1) x(2) x(3) u(2) u(1)]));
+%F_u = eval(subs(J_u, [xTheta uDeltaSr uDeltaSl], [x(3) u(2) u(1)]));
 %ENDRM
+ 
