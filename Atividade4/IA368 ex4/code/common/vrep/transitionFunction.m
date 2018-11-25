@@ -9,7 +9,16 @@ function [f, F_x, F_u] = transitionFunction(x,u, l)
 
 %STARTRM
 %syms xX xY xTheta uDeltaSr uDeltaSl;
+% Jacobians - Symbolic.
+%J_x = jacobian(f_Sym, [xX;xY;xTheta]);
+%J_u = jacobian(f_Sym, [uDeltaSl;uDeltaSr]);
+
+% Evaluation 
+%f =  eval(subs(f_Sym, [xX xY xTheta uDeltaSr uDeltaSl], [x(1) x(2) x(3) u(2) u(1)]));
+%F_x = eval(subs(J_x, [xX xY xTheta uDeltaSr uDeltaSl], [x(1) x(2) x(3) u(2) u(1)]));
+%F_u = eval(subs(J_u, [xTheta uDeltaSr uDeltaSl], [x(3) u(2) u(1)]));
 % Symbolic solution does not seem to work at all.
+
 xX = x(1);
 xY = x(2);
 xTheta = x(3);
@@ -33,13 +42,6 @@ F_u = [cos(xTheta+(((uDeltaSr - uDeltaSl)/l)/2))/2 + (((uDeltaSr + uDeltaSl)/2)/
        (-1/(l))...
           (1/(l))] ;
 
-% Jacobians - Symbolic.
-%J_x = jacobian(f_Sym, [xX;xY;xTheta]);
-%J_u = jacobian(f_Sym, [uDeltaSl;uDeltaSr]);
 
-% Evaluation 
-%f =  eval(subs(f_Sym, [xX xY xTheta uDeltaSr uDeltaSl], [x(1) x(2) x(3) u(2) u(1)]));
-%F_x = eval(subs(J_x, [xX xY xTheta uDeltaSr uDeltaSl], [x(1) x(2) x(3) u(2) u(1)]));
-%F_u = eval(subs(J_u, [xTheta uDeltaSr uDeltaSl], [x(3) u(2) u(1)]));
 %ENDRM
  
