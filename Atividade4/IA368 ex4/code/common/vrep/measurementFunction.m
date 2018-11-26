@@ -11,12 +11,18 @@ function [h, H_x] = measurementFunction(x, m)
 % frame into the body coordinate frame of the robot, z^t, given by the
 % return parameter h. m(1) and m(2) are map entries.
 % This formula is taken from the reference (1), 5.94.
-h = [m(1) - x(3); 
-     m(2)-(x(1)*cos(m(1))+x(2)*sin(m(1)))];
+xX = x(1);
+xY = x(2);
+xTheta = x(3);
+Map1 = m(1);
+Map2 = m(2);
+
+h = [Map1 - xTheta; 
+     Map2 - (xX*cos(Map1) + xY*sin(Map1))];
 
 % Jacobian of h above. (5.95).
 H_x = [0          0          -1; 
-       -cos(m(1)) -sin(m(1))  0];
+       -cos(Map1) -sin(Map1)  0];
 %ENDRM
 
 [h(1), h(2), isRNegated] = normalizeLineParameters(h(1), h(2));
